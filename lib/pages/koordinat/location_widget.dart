@@ -334,6 +334,37 @@ UTM: ${_coordinateList[index]['utmCoordinate']}
     );
   }
 
+  Widget _buildCoordinateRow(String title, String? coordinate, int index) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            coordinate!,
+            style: const TextStyle(fontSize: 14),
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.copy),
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: coordinate));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$title kopyalandı'),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _buildCoordinateCard(int index) {
     if (index < 0 || index >= _coordinateList.length) {
       return const SizedBox.shrink();
@@ -357,19 +388,15 @@ UTM: ${_coordinateList[index]['utmCoordinate']}
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            _buildCoordinateRow('WGS84:', coordinate['wgs84Coordinate']),
+            _buildCoordinateRow('WGS84:', coordinate['wgs84Coordinate'], index),
             const SizedBox(height: 8),
-            _buildCoordinateRow('DMS:', coordinate['dmsCoordinate']),
+            _buildCoordinateRow('DMS:', coordinate['dmsCoordinate'], index),
             const SizedBox(height: 8),
-            _buildCoordinateRow('UTM:', coordinate['utmCoordinate']),
+            _buildCoordinateRow('UTM:', coordinate['utmCoordinate'], index),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.copy),
-                  onPressed: () => _copyAllCoordinates(index),
-                ),
                 IconButton(
                   icon: const Icon(Icons.edit),
                   onPressed: () {
@@ -387,25 +414,6 @@ UTM: ${_coordinateList[index]['utmCoordinate']}
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCoordinateRow(String title, String? coordinate) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            coordinate!,
-            style: const TextStyle(fontSize: 14),
-          ),
-        ),
-      ],
     );
   }
 }
