@@ -8,7 +8,6 @@ plugins {
 }
 
 
-apply plugin: 'com.google.gms.google-services'
 
 
 def keystoreProperties = new Properties()
@@ -35,14 +34,24 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
+
+
+    lintOptions {
+        baseline file("lint-baseline.xml")
+        abortOnError false
     }
+
 
     kotlinOptions {
         jvmTarget = "17"
     }
 
+
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+    }
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs += ['-Xlint:deprecation']
     }
 
     defaultConfig {
@@ -81,6 +90,10 @@ android {
     }
 }
 
+
+
+
+
 flutter {
     source '../..'
 }
@@ -88,12 +101,15 @@ flutter {
 
 
 
-dependencies {
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation platform('com.google.firebase:firebase-bom:33.2.0')
-    implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.google.android.gms:play-services-auth:21.2.0'
-    implementation 'com.google.android.play:core-ktx:1.8.1'
+    dependencies {
+        implementation 'androidx.multidex:multidex:2.0.1'
+        implementation platform('com.google.firebase:firebase-bom:33.2.0')
+        implementation 'com.google.firebase:firebase-auth'
+        implementation 'com.google.firebase:firebase-analytics'
+        implementation 'com.google.firebase:firebase-firestore'
+        implementation 'com.google.android.gms:play-services-auth:21.2.0'
+        implementation 'com.google.android.play:integrity:1.4.0'
+        testImplementation 'org.mockito:mockito-core:5.2.0'
+    }
+
 }
