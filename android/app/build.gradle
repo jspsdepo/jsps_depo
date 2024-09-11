@@ -7,9 +7,6 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
-
-
-
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
@@ -34,24 +31,25 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
-
+        coreLibraryDesugaringEnabled true // Java 8+ API uyumluluğu için
+    }
 
     lintOptions {
         baseline file("lint-baseline.xml")
         abortOnError false
     }
 
-
     kotlinOptions {
         jvmTarget = "17"
     }
 
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
+
     tasks.withType(JavaCompile).configureEach {
-        options.compilerArgs += ['-Xlint:deprecation']
+        options.compilerArgs += ['-Xlint:-options', '-Xlint:none', '-Xlint:deprecation']
+
     }
 
     defaultConfig {
@@ -90,26 +88,21 @@ android {
     }
 }
 
-
-
-
-
 flutter {
     source '../..'
 }
 
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation platform('com.google.firebase:firebase-bom:33.2.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.android.gms:play-services-auth:21.2.0'
+    implementation 'com.google.android.play:integrity:1.4.0'
+    testImplementation 'org.mockito:mockito-core:5.2.0'
 
-
-
-    dependencies {
-        implementation 'androidx.multidex:multidex:2.0.1'
-        implementation platform('com.google.firebase:firebase-bom:33.2.0')
-        implementation 'com.google.firebase:firebase-auth'
-        implementation 'com.google.firebase:firebase-analytics'
-        implementation 'com.google.firebase:firebase-firestore'
-        implementation 'com.google.android.gms:play-services-auth:21.2.0'
-        implementation 'com.google.android.play:integrity:1.4.0'
-        testImplementation 'org.mockito:mockito-core:5.2.0'
-    }
-
+    // Java 8+ API'lerini desteklemek için desugaring
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
 }
+

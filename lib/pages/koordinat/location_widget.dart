@@ -32,17 +32,15 @@ class _LocationWidgetState extends State<LocationWidget> {
   Future<void> _loadCoordinates() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? savedCoordinates = prefs.getStringList('coordinates');
-    if (savedCoordinates != null) {
-      setState(() {
-        _coordinateList.addAll(
-          savedCoordinates.map((coord) {
-            Map<String, dynamic> decoded =
-                jsonDecode(coord) as Map<String, dynamic>;
-            return decoded.map((key, value) => MapEntry(key, value.toString()));
-          }).toList(),
-        );
-      });
-    }
+    setState(() {
+      _coordinateList.addAll(
+        savedCoordinates!.map((coord) {
+          Map<String, dynamic> decoded =
+              jsonDecode(coord) as Map<String, dynamic>;
+          return decoded.map((key, value) => MapEntry(key, value.toString()));
+        }).toList(),
+      );
+    });
 
     try {
       CollectionReference coordinates =

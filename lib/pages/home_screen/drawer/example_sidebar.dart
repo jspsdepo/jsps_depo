@@ -50,7 +50,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Future<void> _loadBookmarkedPages() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String>? bookmarks = prefs.getStringList('bookmarkedPages');
-    if (bookmarks != null && bookmarks.isNotEmpty) {
+    if (bookmarks!.isNotEmpty) {
       setState(() {
         _bookmarkedPages = bookmarks;
       });
